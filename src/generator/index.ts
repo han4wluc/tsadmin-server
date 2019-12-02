@@ -36,9 +36,19 @@ const generate = (app, config) => {
             app.get(`/${label}`, async (req, res) => {
                 const conditionsObj = extractFilter(req.query.filter)
                 const filterObj = _converFilterObj(conditionsObj)
-                console.warn('filterObj', filterObj)
                 const items = await repository.find(filterObj);
                 res.status(200).json({items})
+            })
+        }
+
+        if (routes.getOne && routes.getOne.enabled) {
+            app.get(`/${label}/:id`, async (req, res) => {
+                const {id} = req.params
+                const item = await repository.findOne(id)
+                if (!item) {
+                    return res.status(404).send()
+                }
+                res.status(200).json(item)
             })
         }
     })
