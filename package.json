@@ -1,0 +1,27 @@
+{
+   "name": "typeormexpress",
+   "version": "0.0.1",
+   "description": "Awesome project developed with TypeORM.",
+   "devDependencies": {
+      "@types/chai": "^4.2.5",
+      "@types/mocha": "^5.2.7",
+      "@types/node": "^8.0.29",
+      "chai": "^4.2.0",
+      "mocha": "^6.2.2",
+      "nodemon": "^2.0.1",
+      "supertest": "^4.0.2",
+      "ts-node": "3.3.0",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "body-parser": "^1.18.1",
+      "express": "^4.15.4",
+      "reflect-metadata": "^0.1.10",
+      "sqlite3": "^4.0.3",
+      "typeorm": "0.2.20"
+   },
+   "scripts": {
+      "start": "ts-node src/index.ts",
+      "test": "nodemon --exec 'mocha -r ts-node/register tests/**/*.spec.ts'"
+   }
+}
