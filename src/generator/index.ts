@@ -51,6 +51,34 @@ const generate = (app, config) => {
                 res.status(200).json(item)
             })
         }
+
+        if (routes.updateOne && routes.updateOne.enabled) {
+            app.patch(`/${label}/:id`, async (req, res) => {
+                const {id} = req.params
+                const item = await repository.findOne(id)
+                if (!item) {
+                    return res.status(404).send()
+                }
+                Object.keys(req.body).map((key) => {
+                    const value = req.body[key]
+                    item[key] = value
+                })
+                await repository.save(item)
+                res.status(200).json(item)
+            })
+        }
+
+        if (routes.delete && routes.delete.enabled) {
+            app.delete(`/${label}/:id`, async (req, res) => {
+                const {id} = req.params
+                const item = await repository.findOne(id)
+                if (!item) {
+                    return res.status(404).send()
+                }
+                await repository.remove(item)
+                res.status(200).send()
+            })
+        }
     })
 }
 
