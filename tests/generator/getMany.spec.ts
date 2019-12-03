@@ -28,10 +28,6 @@ describe('generator getAll', () => {
     await repository.save(user2)
   })
 
-// pageNum=1&
-// pageSize=100&
-// sort=id:desc,username:asc&
-
   it('should return all users', async () => {
     const config = {
       models: [{

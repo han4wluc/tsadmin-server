@@ -5,7 +5,6 @@ import * as chai from 'chai'
 import 'mocha';
 import {getRepository} from "typeorm"
 import generator from '../../src/generator'
-import { goldenrod } from 'color-name';
 
 const assert = chai.assert
 
