@@ -1,5 +1,6 @@
 
 import {getRepository} from "typeorm";
+import * as cors from 'cors'
 
 import extractFilter from '../helpers/extractFilter'
 
@@ -16,7 +17,23 @@ const _converFilterObj = (input) => {
     return output
 }
 
-const generate = (app, config) => {    
+const generate = (app, config) => {
+
+    app.use(cors())
+
+    app.get('/entities', (req, res) => {
+        res.status(200).json({
+            entities: config.models.map((model) => {
+                return {
+                    id: model.id,
+                    label: model.label,
+                    routes: model.routes,
+                    columns: model.entity.toAdminJson().columns
+                }
+            })
+        })
+    })
+
     config.models.forEach((model) => {
         const {
             label, entity: Entity, routes

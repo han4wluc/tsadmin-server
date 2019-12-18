@@ -9,6 +9,7 @@ const main = async () => {
     const app = await createApp()
     const config = {
         models: [{
+            id: 0,
             label: 'users',
             entity: User,
             routes: {
@@ -17,13 +18,19 @@ const main = async () => {
                 },
                 getMany: {
                     enabled: true
+                },
+                updateOne: {
+                    enabled: true
+                },
+                delete: {
+                    enabled: true
                 }
             }
         }]
     }
     generator(app, config)
-    app.listen(3000)
-    console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
+    app.listen(8000)
+    console.log("Express server has started on port 8000. Open http://localhost:8000/users to see results");
 }
 
 
