@@ -7,6 +7,7 @@
       "@types/mocha": "^5.2.7",
       "@types/node": "^8.0.29",
       "chai": "^4.2.0",
+      "husky": "^3.1.0",
       "mocha": "^6.2.2",
       "nodemon": "^2.0.1",
       "supertest": "^4.0.2",
@@ -23,6 +24,14 @@
    },
    "scripts": {
       "start": "ts-node src/index.ts",
-      "test": "nodemon --exec 'mocha -r ts-node/register tests/**/*.spec.ts'"
+      "lint": "echo ok",
+      "test": "mocha -r ts-node/register tests/**/*.spec.ts",
+      "test:watch": "nodemon --exec 'mocha -r ts-node/register tests/**/*.spec.ts'"
+   },
+   "husky": {
+      "hooks": {
+        "pre-commit": "yarn lint",
+        "pre-push": "yarn lint && yarn test"
+      }
    }
 }
