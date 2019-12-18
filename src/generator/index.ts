@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import * as cors from 'cors';
 
-import extractFilter from '../helpers/extractFilter';
+import extractFilter from '~/helpers/extractFilter';
 
 const _converFilterObj = (input): any => {
   const output = {};

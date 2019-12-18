@@ -1,6 +1,6 @@
-import { createApp } from './express';
-import generator from './generator';
-import { User } from './entity/User';
+import { createApp } from '~/express';
+import generator from '~/generator';
+import { User } from '~/entity/User';
 
 const main = async (): Promise<any> => {
   const app = await createApp();

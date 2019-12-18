@@ -1,0 +1,6 @@
+test/**/*.spec.ts
+-r ts-node/register
+-r tsconfig-paths/register
+--ignore node_modules
+--extension ts
+--recursive

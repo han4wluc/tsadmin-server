@@ -1,10 +1,11 @@
-import { createApp } from '../../src/express';
-import { User } from '../../src/entity/User';
-import * as request from 'supertest';
+import { getRepository } from 'typeorm';
 import * as chai from 'chai';
 import 'mocha';
-import { getRepository } from 'typeorm';
-import generator from '../../src/generator';
+import * as request from 'supertest';
+
+import { createApp } from '~/express';
+import { User } from '~/entity/User';
+import generator from '~/generator';
 
 const assert = chai.assert;
 

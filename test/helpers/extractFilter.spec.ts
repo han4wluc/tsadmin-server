@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import extractFilter from '../../src/helpers/extractFilter';
+import extractFilter from '~/helpers/extractFilter';
 
 describe('extractFilter', () => {
   it('should extract single condition', () => {

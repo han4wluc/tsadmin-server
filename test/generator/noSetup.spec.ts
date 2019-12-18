@@ -1,8 +1,9 @@
 import 'mocha';
-import { createApp } from '../../src/express';
-import { User } from '../../src/entity/User';
 import * as request from 'supertest';
 import { getRepository } from 'typeorm';
+
+import { createApp } from '~/express';
+import { User } from '~/entity/User';
 
 describe('without setting up generators', () => {
   this.app = undefined;
