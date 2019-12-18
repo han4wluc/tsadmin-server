@@ -1,41 +1,38 @@
+const _extractOperator = (input: string): string => {
+  return input.substring(4, input.length - 1);
+};
 
+const _extractConditions = (input: string): string[] => {
+  return input.split(',');
+};
 
-const _extractOperator = (input) => {
-    return input.substring(4, input.length - 1)
-}
+const _extractValues = (input: string): string[] => {
+  return input.split(':');
+};
 
-const _extractConditions = (input) => {
-    return input.split(',')
-}
+const extractFilter = (input: string): object => {
+  const output = {
+    operator: 'AND',
+    conditions: [],
+  };
 
-const _extractValues = (input) => {
-    return input.split(':')
-}
+  if (!input) {
+    return output;
+  }
 
+  const raw = _extractOperator(input);
+  const conditions = _extractConditions(raw);
 
-const extractFilter = (input) => {
-    const output = {
-        operator: 'AND',
-        conditions: []
-    }
+  conditions.forEach(conditionObj => {
+    const [fieldName, filter, value] = _extractValues(conditionObj);
+    output.conditions.push({
+      fieldName,
+      filter,
+      value,
+    });
+  });
 
-    if (!input) {
-        return output
-    }
+  return output;
+};
 
-    const raw = _extractOperator(input)
-    const conditions = _extractConditions(raw)
-
-    conditions.forEach((conditionObj) => {
-        const [fieldName, filter, value] = _extractValues(conditionObj)
-        output.conditions.push({
-            fieldName,
-            filter,
-            value
-        })
-    })
-
-    return output
-}
-
-export default extractFilter
+export default extractFilter;

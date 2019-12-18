@@ -1,52 +1,52 @@
-import {createApp} from '../../src/express'
-import {User} from '../../src/entity/User'
-import * as request from 'supertest'
-import * as chai from 'chai'
+import { createApp } from '../../src/express';
+import { User } from '../../src/entity/User';
+import * as request from 'supertest';
+import * as chai from 'chai';
 import 'mocha';
-import {getRepository} from "typeorm"
-import generator from '../../src/generator'
+import { getRepository } from 'typeorm';
+import generator from '../../src/generator';
 
-const assert = chai.assert
+const assert = chai.assert;
 
 describe('updateOne', () => {
   this.app = undefined;
   beforeEach(async () => {
-    this.app = await createApp()
-    const repository = getRepository(User)
+    this.app = await createApp();
+    const repository = getRepository(User);
     await repository.query(`DELETE FROM user;`);
     const user = new User({
       firstName: 'aaa',
       lastName: 'bbb',
-      age: 9
-    })
-    await repository.save(user)
-  })
+      age: 9,
+    });
+    await repository.save(user);
+  });
 
   it('should update one user', async () => {
-    const repository = getRepository(User)
+    const repository = getRepository(User);
     const config = {
-      models: [{
-        label: 'users',
-        entity: User,
-        routes: {
+      models: [
+        {
+          label: 'users',
+          entity: User,
+          routes: {
             delete: {
-                enabled: true
-            }
-        }
-    }]}
+              enabled: true,
+            },
+          },
+        },
+      ],
+    };
 
-    const user = await repository.findOne()
+    const user = await repository.findOne();
 
-    generator(this.app, config)
+    generator(this.app, config);
     return request(this.app)
       .delete(`/users/${user.id}`)
       .expect(200)
       .then(async () => {
-        const newUser = await repository.findOne(user.id)
-        assert.equal(newUser, undefined)
-     })
+        const newUser = await repository.findOne(user.id);
+        assert.equal(newUser, undefined);
+      });
   });
-
-
-
 });
