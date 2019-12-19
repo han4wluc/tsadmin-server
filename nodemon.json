@@ -7,7 +7,7 @@
     "verbose": true,
     "watch": [
       "src/",
-      "tests/"
+      "test/"
     ],
     "ext": "ts,json,js,jsx"
   }

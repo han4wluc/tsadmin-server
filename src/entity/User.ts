@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Generated,
+  VersionColumn,
+} from 'typeorm';
 
 type AdminJsonType = {
   columns: {
@@ -35,6 +43,10 @@ export class User {
   id: number;
 
   @Column()
+  @Generated('uuid')
+  uuid: string;
+
+  @Column()
   firstName: string;
 
   @Column()
@@ -43,13 +55,43 @@ export class User {
   @Column()
   age: number;
 
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  birthday: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @VersionColumn()
+  version: number;
+
   static toAdminJson = (): AdminJsonType => {
     return {
       columns: [
         {
           id: 'id',
           label: 'id',
-          type: 'uuid',
+          type: 'number',
+          options: {},
+          required: false,
+          create: {
+            display: false,
+            editable: false,
+          },
+          update: {
+            display: true,
+            editable: false,
+          },
+        },
+        {
+          id: 'uuid',
+          label: 'uuid',
+          type: 'string',
           options: {},
           required: false,
           create: {
@@ -110,6 +152,36 @@ export class User {
           update: {
             display: true,
             editable: true,
+          },
+        },
+        {
+          id: 'createdAt',
+          label: 'Created At',
+          type: 'datetime',
+          options: {},
+          required: false,
+          create: {
+            display: false,
+            editable: false,
+          },
+          update: {
+            display: true,
+            editable: false,
+          },
+        },
+        {
+          id: 'updatedAt',
+          label: 'Updated At',
+          type: 'datetime',
+          options: {},
+          required: false,
+          create: {
+            display: false,
+            editable: false,
+          },
+          update: {
+            display: true,
+            editable: false,
           },
         },
       ],

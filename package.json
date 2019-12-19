@@ -33,7 +33,7 @@
       "start": "ts-node src/index.ts",
       "lint": "eslint src test --ext ts",
       "test": "mocha",
-      "test:watch": "nodemon --exec 'mocha -r ts-node/register tests/**/*.spec.ts'"
+      "test:watch": "nodemon --exec 'mocha'"
    },
    "husky": {
       "hooks": {
