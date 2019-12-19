@@ -34,7 +34,7 @@ describe('generator getAll', () => {
       models: [
         {
           label: 'users',
-          entity: User,
+          entity: 'User',
           routes: {
             getMany: {
               enabled: true,
@@ -60,7 +60,7 @@ describe('generator getAll', () => {
       models: [
         {
           label: 'users',
-          entity: User,
+          entity: 'User',
           routes: {
             getMany: {
               enabled: true,

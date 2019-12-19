@@ -1,6 +1,5 @@
 import { createApp } from '~/express';
 import generator from '~/generator';
-import { User } from '~/entity/User';
 
 const main = async (): Promise<any> => {
   const app = await createApp();
@@ -9,7 +8,7 @@ const main = async (): Promise<any> => {
       {
         id: 0,
         label: 'users',
-        entity: User,
+        entity: 'User',
         routes: {
           create: {
             enabled: true,

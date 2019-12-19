@@ -1,5 +1,25 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+type AdminJsonType = {
+  columns: {
+    id: string | number;
+    label: string;
+    type: string;
+    options: object;
+    required: boolean;
+    create: {
+      display: boolean;
+      default?: any;
+      editable: boolean;
+    };
+    update: {
+      display: boolean;
+      default?: any;
+      editable: boolean;
+    };
+  }[];
+};
+
 @Entity()
 export class User {
   constructor(params) {
@@ -23,14 +43,18 @@ export class User {
   @Column()
   age: number;
 
-  static toAdminJson = (): any => {
+  static toAdminJson = (): AdminJsonType => {
     return {
       columns: [
         {
+          id: 'id',
           label: 'id',
           type: 'uuid',
+          options: {},
+          required: false,
           create: {
             display: false,
+            editable: false,
           },
           update: {
             display: true,
@@ -38,11 +62,14 @@ export class User {
           },
         },
         {
-          label: 'firstName',
+          id: 'firstName',
+          label: 'First Name',
           type: 'string',
+          options: {},
           required: true,
           create: {
             display: true,
+            editable: true,
           },
           update: {
             display: true,
@@ -50,21 +77,34 @@ export class User {
           },
         },
         {
-          label: 'lastName',
+          id: 'lastName',
+          label: 'Last Name',
           type: 'string',
+          options: {},
+          required: true,
           create: {
             display: true,
+            editable: true,
+            default: false,
           },
           update: {
             display: true,
             editable: true,
+            default: false,
           },
         },
         {
-          label: 'age',
+          id: 'age',
+          label: 'Age',
           type: 'number',
+          options: {
+            min: 1,
+            max: 100,
+          },
+          required: false,
           create: {
             display: true,
+            editable: true,
             default: 18,
           },
           update: {

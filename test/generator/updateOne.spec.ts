@@ -29,7 +29,7 @@ describe('updateOne', () => {
       models: [
         {
           label: 'users',
-          entity: User,
+          entity: 'User',
           routes: {
             updateOne: {
               enabled: true,

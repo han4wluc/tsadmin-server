@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
 import * as cors from 'cors';
+import { entitiesMap } from '~/entity';
 
 import extractFilter from '~/helpers/extractFilter';
 
@@ -22,14 +23,16 @@ const generate = (app, config): any => {
           id: model.id,
           label: model.label,
           routes: model.routes,
-          columns: model.entity.toAdminJson().columns,
+          columns: entitiesMap[model.entity].toAdminJson().columns,
         };
       }),
     });
   });
 
   config.models.forEach(model => {
-    const { label, entity: Entity, routes } = model;
+    const { label, entity, routes } = model;
+
+    const Entity = entitiesMap[entity];
 
     const repository = getRepository(Entity);
 

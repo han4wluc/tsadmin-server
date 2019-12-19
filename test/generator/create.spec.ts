@@ -22,7 +22,7 @@ describe('create generator', () => {
       models: [
         {
           label: 'users',
-          entity: User,
+          entity: 'User',
           routes: {
             create: {
               enabled: true,
