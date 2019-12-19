@@ -28,6 +28,23 @@ type AdminJsonType = {
   }[];
 };
 
+function toObject(e: any): object {
+  const obj = {};
+  const length = Object.values(e).length / 2;
+  Object.values<any>(e)
+    .slice(0, length)
+    .forEach(key => {
+      obj[key] = e[key];
+    });
+  return obj;
+}
+
+export enum UserRole {
+  admin,
+  editor,
+  ghost,
+}
+
 @Entity()
 export class User {
   constructor(params) {
@@ -60,6 +77,25 @@ export class User {
     nullable: true,
   })
   birthday: Date;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.ghost,
+  })
+  role: UserRole;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  notes: string;
+
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
+  config: object;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -101,6 +137,24 @@ export class User {
           update: {
             display: true,
             editable: false,
+          },
+        },
+        {
+          id: 'role',
+          label: 'role',
+          type: 'enum',
+          options: {
+            enumValues: toObject(UserRole),
+          },
+          required: false,
+          create: {
+            display: true,
+            editable: true,
+            default: UserRole.ghost,
+          },
+          update: {
+            display: true,
+            editable: true,
           },
         },
         {
@@ -148,6 +202,51 @@ export class User {
             display: true,
             editable: true,
             default: 18,
+          },
+          update: {
+            display: true,
+            editable: true,
+          },
+        },
+        {
+          id: 'birthday',
+          label: 'birthday',
+          type: 'date',
+          options: {},
+          required: false,
+          create: {
+            display: true,
+            editable: true,
+          },
+          update: {
+            display: true,
+            editable: true,
+          },
+        },
+        {
+          id: 'notes',
+          label: 'notes',
+          type: 'text',
+          options: {},
+          required: false,
+          create: {
+            display: true,
+            editable: true,
+          },
+          update: {
+            display: true,
+            editable: true,
+          }
+        },
+        {
+          id: 'config',
+          label: 'config',
+          type: 'json',
+          options: {},
+          required: false,
+          create: {
+            display: true,
+            editable: true,
           },
           update: {
             display: true,

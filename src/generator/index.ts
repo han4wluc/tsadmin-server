@@ -17,15 +17,16 @@ const generate = (app, config): any => {
   app.use(cors());
 
   app.get('/entities', (req, res) => {
+    const entities = config.models.map(model => {
+      return {
+        id: model.id,
+        label: model.label,
+        routes: model.routes,
+        columns: entitiesMap[model.entity].toAdminJson().columns,
+      };
+    });
     res.status(200).json({
-      entities: config.models.map(model => {
-        return {
-          id: model.id,
-          label: model.label,
-          routes: model.routes,
-          columns: entitiesMap[model.entity].toAdminJson().columns,
-        };
-      }),
+      entities,
     });
   });
 
