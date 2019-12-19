@@ -1,17 +1,16 @@
 import 'mocha';
 import * as request from 'supertest';
-import { getRepository } from 'typeorm';
 
+import { runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from '~/express';
-import { User } from '~/entity/User';
 
 describe('without setting up generators', () => {
   this.app = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
-    const repository = getRepository(User);
-    await repository.query(`DELETE FROM user;`);
   });
+  afterEach(revertAllMigrations);
   it('should return true', done => {
     request(this.app)
       .get('/users')

@@ -3,6 +3,7 @@ import 'mocha';
 import * as chai from 'chai';
 import { getRepository } from 'typeorm';
 
+import { runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
@@ -11,6 +12,7 @@ const assert = chai.assert;
 
 describe('generator getAll', () => {
   this.app = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
     const repository = getRepository(User);
@@ -28,7 +30,7 @@ describe('generator getAll', () => {
     await repository.save(user);
     await repository.save(user2);
   });
-
+  afterEach(revertAllMigrations);
   it('should return one users', async () => {
     const repository = getRepository(User);
     const config = {

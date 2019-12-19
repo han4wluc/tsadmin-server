@@ -1,7 +1,10 @@
+import { createConnection } from 'typeorm';
+
 import { createApp } from '~/express';
 import generator from '~/generator';
 
 const main = async (): Promise<any> => {
+  await createConnection();
   const app = await createApp();
   const config = {
     models: [

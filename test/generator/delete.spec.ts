@@ -3,6 +3,8 @@ import * as request from 'supertest';
 import * as chai from 'chai';
 import 'mocha';
 
+import { runMigrations, revertAllMigrations } from 'test/db';
+
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
@@ -11,18 +13,18 @@ const assert = chai.assert;
 
 describe('updateOne', () => {
   this.app = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
-    const repository = getRepository(User);
-    await repository.query(`DELETE FROM user;`);
+    this.repository = getRepository(User);
     const user = new User({
       firstName: 'aaa',
       lastName: 'bbb',
       age: 9,
     });
-    await repository.save(user);
+    await this.repository.save(user);
   });
-
+  afterEach(revertAllMigrations);
   it('should update one user', async () => {
     const repository = getRepository(User);
     const config = {

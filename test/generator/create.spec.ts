@@ -1,7 +1,8 @@
 import * as request from 'supertest';
 import * as chai from 'chai';
 import 'mocha';
-import { getRepository } from 'typeorm';
+import { getRepository, getConnection } from 'typeorm';
+import { connect, runMigrations, revertAllMigrations } from 'test/db';
 
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
@@ -9,14 +10,23 @@ import generator from '~/generator';
 
 const assert = chai.assert;
 
+before(() => {
+  return connect();
+});
+
+after(() => {
+  return getConnection().close();
+});
+
 describe('create generator', () => {
   this.app = undefined;
   this.repository = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
-    this.app = await createApp();
+    this.app = createApp();
     this.repository = getRepository(User);
-    await this.repository.query(`DELETE FROM user;`);
   });
+  afterEach(revertAllMigrations);
   it('should return true', () => {
     const config = {
       models: [

@@ -3,6 +3,7 @@ import * as chai from 'chai';
 import 'mocha';
 import * as request from 'supertest';
 
+import { runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
@@ -11,10 +12,10 @@ const assert = chai.assert;
 
 describe('updateOne', () => {
   this.app = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
     const repository = getRepository(User);
-    await repository.query(`DELETE FROM user;`);
     const user = new User({
       firstName: 'aaa',
       lastName: 'bbb',
@@ -22,7 +23,7 @@ describe('updateOne', () => {
     });
     await repository.save(user);
   });
-
+  afterEach(revertAllMigrations);
   it('should update one user', async () => {
     const repository = getRepository(User);
     const config = {

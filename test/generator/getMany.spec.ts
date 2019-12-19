@@ -3,6 +3,7 @@ import 'mocha';
 import * as request from 'supertest';
 import { getRepository } from 'typeorm';
 
+import { runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
@@ -11,10 +12,10 @@ const assert = chai.assert;
 
 describe('generator getAll', () => {
   this.app = undefined;
+  beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
     const repository = getRepository(User);
-    await repository.query(`DELETE FROM user;`);
     const user = new User({
       firstName: 'aaa',
       lastName: 'bbb',
@@ -28,7 +29,7 @@ describe('generator getAll', () => {
     await repository.save(user);
     await repository.save(user2);
   });
-
+  afterEach(revertAllMigrations);
   it('should return all users', async () => {
     const config = {
       models: [
