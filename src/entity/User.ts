@@ -63,6 +63,12 @@ export class User {
   @Generated('uuid')
   uuid: string;
 
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  active: boolean;
+
   @Column()
   firstName: string;
 
@@ -111,7 +117,7 @@ export class User {
       columns: [
         {
           id: 'id',
-          label: 'id',
+          label: 'ID',
           type: 'number',
           options: {},
           required: false,
@@ -126,7 +132,7 @@ export class User {
         },
         {
           id: 'uuid',
-          label: 'uuid',
+          label: 'UUID',
           type: 'string',
           options: {},
           required: false,
@@ -140,11 +146,28 @@ export class User {
           },
         },
         {
+          id: 'active',
+          label: 'Active',
+          type: 'boolean',
+          options: {},
+          required: true,
+          create: {
+            display: true,
+            editable: true,
+            default: true,
+          },
+          update: {
+            display: true,
+            editable: true,
+            default: true,
+          },
+        },
+        {
           id: 'role',
-          label: 'role',
+          label: 'Role',
           type: 'enum',
           options: {
-            enumValues: toObject(UserRole),
+            enumObject: toObject(UserRole),
           },
           required: false,
           create: {
@@ -210,7 +233,7 @@ export class User {
         },
         {
           id: 'birthday',
-          label: 'birthday',
+          label: 'Birthday',
           type: 'date',
           options: {},
           required: false,
@@ -225,7 +248,7 @@ export class User {
         },
         {
           id: 'notes',
-          label: 'notes',
+          label: 'Notes',
           type: 'text',
           options: {},
           required: false,
@@ -236,13 +259,15 @@ export class User {
           update: {
             display: true,
             editable: true,
-          }
+          },
         },
         {
           id: 'config',
-          label: 'config',
+          label: 'Config',
           type: 'json',
-          options: {},
+          options: {
+            rows: 10,
+          },
           required: false,
           create: {
             display: true,

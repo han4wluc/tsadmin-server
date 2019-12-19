@@ -31,7 +31,7 @@
       "typeorm": "0.2.20"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node -r tsconfig-paths/register src/index.ts",
       "lint": "eslint src test --ext ts",
       "test": "mocha",
       "test:watch": "nodemon --exec 'mocha'",
