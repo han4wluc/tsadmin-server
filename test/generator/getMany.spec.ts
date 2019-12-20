@@ -80,4 +80,35 @@ describe('generator getAll', () => {
         assert.equal(response.body.items[0].firstName, 'aaa');
       });
   });
+
+  it('should return with correct sort', async () => {
+    const config = {
+      models: [
+        {
+          label: 'users',
+          entity: 'User',
+          routes: {
+            getMany: {
+              enabled: true,
+            },
+          },
+        },
+      ],
+    };
+
+    generator(this.app, config);
+    return request(this.app)
+      .get('/users?sort=id:desc')
+      .expect(200)
+      .then(response => {
+        assert.equal(response.body.items.length, 2);
+        assert.equal(response.body.items[0].firstName, 'ccc');
+        assert.deepEqual(response.body.sort, [
+          {
+            column: 'id',
+            order: 'desc',
+          },
+        ]);
+      });
+  });
 });

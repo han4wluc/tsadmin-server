@@ -3,12 +3,22 @@ import * as cors from 'cors';
 import { entitiesMap } from '~/entity';
 
 import extractFilter from '~/helpers/extractFilter';
+import extractSort from '~/helpers/extractSort';
 
 const _converFilterObj = (input): any => {
   const output = {};
   input.conditions.forEach(obj => {
     const { fieldName, value } = obj;
     output[fieldName] = value;
+  });
+  return output;
+};
+
+const _convertSortObj = (input): any => {
+  const output = {};
+  input.forEach(sortObj => {
+    const { column, order } = sortObj;
+    output[column] = order.toUpperCase();
   });
   return output;
 };
@@ -57,11 +67,14 @@ const generate = (app, config): any => {
         const skip = (pageNum - 1) * pageSize;
         const conditionsObj = extractFilter(req.query.filter);
         const filterObj = _converFilterObj(conditionsObj);
+        const intermediateSortObj = extractSort(req.query.sort);
+        const sortObj = _convertSortObj(intermediateSortObj);
         const [items, total] = await repository
           .createQueryBuilder(label)
           .where(filterObj)
           .take(take)
           .skip(skip)
+          .orderBy(sortObj)
           .getManyAndCount();
         res.status(200).json({
           items,
@@ -70,6 +83,7 @@ const generate = (app, config): any => {
             size: pageSize,
             total,
           },
+          sort: intermediateSortObj,
         });
       });
     }
