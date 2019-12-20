@@ -308,6 +308,21 @@ export class User {
             editable: false,
           },
         },
+        {
+          id: 'version',
+          label: 'Version',
+          type: 'number',
+          options: {},
+          required: false,
+          create: {
+            display: false,
+            editable: false,
+          },
+          update: {
+            display: true,
+            editable: false,
+          },
+        },
       ],
     };
   };
