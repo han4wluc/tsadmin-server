@@ -47,10 +47,30 @@ const generate = (app, config): any => {
 
     if (routes.getMany && routes.getMany.enabled) {
       app.get(`/${label}`, async (req, res) => {
+        const pageNum =
+          req.query.pageNum === undefined ? 1 : parseInt(req.query.pageNum, 10);
+        const pageSize =
+          req.query.pageSize === undefined
+            ? 10
+            : parseInt(req.query.pageSize, 10);
+        const take = pageSize;
+        const skip = (pageNum - 1) * pageSize;
         const conditionsObj = extractFilter(req.query.filter);
         const filterObj = _converFilterObj(conditionsObj);
-        const items = await repository.find(filterObj);
-        res.status(200).json({ items });
+        const [items, total] = await repository
+          .createQueryBuilder(label)
+          .where(filterObj)
+          .take(take)
+          .skip(skip)
+          .getManyAndCount();
+        res.status(200).json({
+          items,
+          page: {
+            num: pageNum,
+            size: pageSize,
+            total,
+          },
+        });
       });
     }
 
