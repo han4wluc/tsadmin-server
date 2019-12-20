@@ -32,9 +32,10 @@
    },
    "scripts": {
       "start": "ts-node -r tsconfig-paths/register src/index.ts",
+      "start:dev": "NODE_ENV=development ts-node -r tsconfig-paths/register src/index.ts",
       "lint": "eslint src test --ext ts",
-      "test": "mocha",
-      "test:watch": "nodemon --exec 'mocha'",
+      "test": "NODE_ENV=testing mocha",
+      "test:watch": "NODE_ENV=testing nodemon --exec 'mocha'",
       "typeorm": "ts-node ./node_modules/typeorm/cli.js"
    },
    "husky": {
