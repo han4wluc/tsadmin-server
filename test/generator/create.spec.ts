@@ -46,7 +46,7 @@ describe('create generator', () => {
 
     return request(this.app)
       .post('/users')
-      .send({ firstName: 'john', lastName: 'Smith', age: 20 })
+      .send({ data: { firstName: 'john', lastName: 'Smith', age: 20 } })
       .expect(201)
       .then(async response => {
         assert.equal(response.body.firstName, 'john');

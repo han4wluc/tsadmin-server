@@ -49,7 +49,7 @@ const generate = (app, config): any => {
 
     if (routes.create && routes.create.enabled) {
       app.post(`/${label}`, async (req, res) => {
-        const item = new Entity(req.body);
+        const item = new Entity(req.body.data);
         await repository.save(item);
         res.status(201).json(item);
       });
@@ -106,8 +106,8 @@ const generate = (app, config): any => {
         if (!item) {
           return res.status(404).send();
         }
-        Object.keys(req.body).map(key => {
-          const value = req.body[key];
+        Object.keys(req.body.data).map(key => {
+          const value = req.body.data[key];
           item[key] = value;
         });
         await repository.save(item);

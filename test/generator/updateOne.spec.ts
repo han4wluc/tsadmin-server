@@ -45,7 +45,7 @@ describe('updateOne', () => {
     generator(this.app, config);
     return request(this.app)
       .patch(`/users/${user.id}`)
-      .send({ firstName: 'newname' })
+      .send({ data: { firstName: 'newname' } })
       .expect(200)
       .then(async response => {
         assert.equal(response.body.firstName, 'newname');
