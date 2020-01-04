@@ -8,6 +8,8 @@ import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
 
+import { entitiesMap } from '~/entity';
+
 const assert = chai.assert;
 
 describe('generator getAll', () => {
@@ -45,7 +47,7 @@ describe('generator getAll', () => {
       ],
     };
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .get('/users')
       .expect(200)
@@ -71,7 +73,7 @@ describe('generator getAll', () => {
       ],
     };
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .get('/users?filter=and(firstName:eq:aaa)')
       .expect(200)
@@ -96,7 +98,7 @@ describe('generator getAll', () => {
       ],
     };
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .get('/users?sort=id:desc')
       .expect(200)
@@ -106,6 +108,41 @@ describe('generator getAll', () => {
         assert.deepEqual(response.body.sort, [
           {
             column: 'id',
+            order: 'desc',
+          },
+        ]);
+      });
+  });
+
+  it('should return with correct sort', async () => {
+    const config = {
+      models: [
+        {
+          label: 'users',
+          entity: 'User',
+          routes: {
+            getMany: {
+              enabled: true,
+            },
+          },
+        },
+      ],
+    };
+
+    this.app.use(generator(config, entitiesMap, getRepository));
+    return request(this.app)
+      .get('/users?sort=id:desc,age:desc')
+      .expect(200)
+      .then(response => {
+        assert.equal(response.body.items.length, 2);
+        assert.equal(response.body.items[0].firstName, 'ccc');
+        assert.deepEqual(response.body.sort, [
+          {
+            column: 'id',
+            order: 'desc',
+          },
+          {
+            column: 'age',
             order: 'desc',
           },
         ]);

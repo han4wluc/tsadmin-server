@@ -1,0 +1,10 @@
+docker
+src
+test
+.eslintrc.js
+.prettierrc.js
+nodemon.json
+ormconfig.js
+tsconfig.json
+yarn-error.log
+yarn.lock

@@ -8,6 +8,8 @@ import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
 
+import { entitiesMap } from '~/entity';
+
 const assert = chai.assert;
 
 describe('generator getAll', () => {
@@ -49,7 +51,7 @@ describe('generator getAll', () => {
 
     const user = await repository.findOne();
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .get(`/users/${user.id}`)
       .expect(200)
@@ -73,7 +75,7 @@ describe('generator getAll', () => {
       ],
     };
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .get(`/users/99999999`)
       .expect(404);

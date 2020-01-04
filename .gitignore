@@ -6,3 +6,4 @@ tmp/
 temp/
 database.sqlite
 mysql_volume
+yarn-error.log

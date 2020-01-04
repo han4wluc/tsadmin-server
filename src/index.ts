@@ -1,7 +1,8 @@
-import { createConnection } from 'typeorm';
+import { createConnection, getRepository, EntityMetadata } from 'typeorm';
+import { entitiesMap } from '~/entity';
 
 import { createApp } from '~/express';
-import generator from '~/generator';
+import generator, { admin } from '~/generator';
 
 const main = async (): Promise<any> => {
   await createConnection();
@@ -29,10 +30,12 @@ const main = async (): Promise<any> => {
       },
     ],
   };
-  generator(app, config);
+
+  app.use('/api', generator(config, entitiesMap, getRepository));
+  app.use(admin());
   app.listen(8000);
   console.log(
-    'Express server has started on port 8000. Open http://localhost:8000/users to see results',
+    'Express server has started on port 8000. Open http://localhost:8000 to see results',
   );
 };
 
@@ -40,6 +43,6 @@ main()
   .then(() => {
     console.log('started');
   })
-  .catch(() => {
-    console.log('error');
+  .catch((err: any) => {
+    console.log('error', err);
   });

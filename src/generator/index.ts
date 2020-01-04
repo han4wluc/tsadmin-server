@@ -1,9 +1,9 @@
-import { getRepository } from 'typeorm';
+import * as express from 'express';
 import * as cors from 'cors';
-import { entitiesMap } from '~/entity';
+import * as serve from 'express-static';
 
-import extractFilter from '~/helpers/extractFilter';
-import extractSort from '~/helpers/extractSort';
+import extractFilter from '../helpers/extractFilter';
+import extractSort from '../helpers/extractSort';
 
 const _converFilterObj = (input): any => {
   const output = {};
@@ -23,10 +23,12 @@ const _convertSortObj = (input): any => {
   return output;
 };
 
-const generate = (app, config): any => {
-  app.use(cors());
+const generate = (config, entitiesMap, getRepository): any => {
+  const router = express.Router();
 
-  app.get('/entities', (req, res) => {
+  router.use(cors());
+
+  router.get('/entities', (req, res) => {
     const entities = config.models.map(model => {
       return {
         id: model.id,
@@ -44,11 +46,10 @@ const generate = (app, config): any => {
     const { label, entity, routes } = model;
 
     const Entity = entitiesMap[entity];
-
-    const repository = getRepository(Entity);
+    const repository = getRepository(entity);
 
     if (routes.create && routes.create.enabled) {
-      app.post(`/${label}`, async (req, res) => {
+      router.post(`/${label}`, async (req, res) => {
         const item = new Entity(req.body.data);
         await repository.save(item);
         res.status(201).json(item);
@@ -56,7 +57,7 @@ const generate = (app, config): any => {
     }
 
     if (routes.getMany && routes.getMany.enabled) {
-      app.get(`/${label}`, async (req, res) => {
+      router.get(`/${label}`, async (req, res) => {
         const pageNum =
           req.query.pageNum === undefined ? 1 : parseInt(req.query.pageNum, 10);
         const pageSize =
@@ -89,7 +90,7 @@ const generate = (app, config): any => {
     }
 
     if (routes.getOne && routes.getOne.enabled) {
-      app.get(`/${label}/:id`, async (req, res) => {
+      router.get(`/${label}/:id`, async (req, res) => {
         const { id } = req.params;
         const item = await repository.findOne(id);
         if (!item) {
@@ -100,7 +101,7 @@ const generate = (app, config): any => {
     }
 
     if (routes.updateOne && routes.updateOne.enabled) {
-      app.patch(`/${label}/:id`, async (req, res) => {
+      router.patch(`/${label}/:id`, async (req, res) => {
         const { id } = req.params;
         const item = await repository.findOne(id);
         if (!item) {
@@ -116,7 +117,7 @@ const generate = (app, config): any => {
     }
 
     if (routes.delete && routes.delete.enabled) {
-      app.delete(`/${label}/:id`, async (req, res) => {
+      router.delete(`/${label}/:id`, async (req, res) => {
         const { id } = req.params;
         const item = await repository.findOne(id);
         if (!item) {
@@ -127,6 +128,11 @@ const generate = (app, config): any => {
       });
     }
   });
+  return router;
 };
 
 export default generate;
+
+export function admin() {
+  return serve(__dirname + '/../../../static');
+}

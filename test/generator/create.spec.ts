@@ -7,6 +7,7 @@ import { connect, runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from '~/express';
 import { User } from '~/entity/User';
 import generator from '~/generator';
+import { entitiesMap } from '~/entity';
 
 const assert = chai.assert;
 
@@ -42,7 +43,7 @@ describe('create generator', () => {
       ],
     };
 
-    generator(this.app, config);
+    this.app.use(generator(config, entitiesMap, getRepository));
 
     return request(this.app)
       .post('/users')
