@@ -1,68 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Generated,
-  VersionColumn,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
-type AdminJsonType = {
-  columns: {
-    id: string | number;
-    label: string;
-    type: string;
-    options: object;
-    required: boolean;
-    create: {
-      display: boolean;
-      default?: any;
-      editable: boolean;
-    };
-    update: {
-      display: boolean;
-      default?: any;
-      editable: boolean;
-    };
-  }[];
-};
+import BaseEntity, { AdminJsonType } from './BaseEntity';
 
-function toObject(e: any): object {
-  const obj = {};
-  const length = Object.values(e).length / 2;
-  Object.values<any>(e)
-    .slice(0, length)
-    .forEach(key => {
-      obj[key] = e[key];
-    });
-  return obj;
-}
-
-export enum UserRole {
-  admin,
-  editor,
-  ghost,
-}
+export type UserRoleType = 'admin' | 'editor' | 'ghost';
 
 @Entity()
-export class User {
-  constructor(params) {
-    if (params) {
-      Object.keys(params).forEach(key => {
-        const value = params[key];
-        this[key] = value;
-      });
-    }
-  }
-
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  @Generated('uuid')
-  uuid: string;
-
+export class User extends BaseEntity {
   @Column({
     type: 'boolean',
     default: true,
@@ -86,10 +29,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.ghost,
+    enum: ['admin', 'editor', 'ghost'],
+    default: 'ghost',
   })
-  role: UserRole;
+  role: UserRoleType;
 
   @Column({
     type: 'text',
@@ -102,15 +45,6 @@ export class User {
     nullable: true,
   })
   config: object;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @VersionColumn()
-  version: number;
 
   static toAdminJson = (): AdminJsonType => {
     return {
@@ -167,13 +101,17 @@ export class User {
           label: 'Role',
           type: 'enum',
           options: {
-            enumObject: toObject(UserRole),
+            enumObject: {
+              admin: 'admin',
+              editor: 'editor',
+              ghost: 'ghost',
+            },
           },
           required: false,
           create: {
             display: true,
             editable: true,
-            default: UserRole.ghost,
+            default: 'ghost',
           },
           update: {
             display: true,

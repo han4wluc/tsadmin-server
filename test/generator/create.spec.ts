@@ -26,9 +26,6 @@ describe('create generator', () => {
   beforeEach(async () => {
     this.app = createApp();
     this.repository = getRepository(User);
-  });
-  afterEach(revertAllMigrations);
-  it('should return true', () => {
     const config = {
       models: [
         {
@@ -42,12 +39,15 @@ describe('create generator', () => {
         },
       ],
     };
-
     this.app.use(generator(config, entitiesMap, getRepository));
-
+  });
+  afterEach(revertAllMigrations);
+  it('should return true', () => {
     return request(this.app)
       .post('/users')
-      .send({ data: { firstName: 'john', lastName: 'Smith', age: 20 } })
+      .send({
+        data: { firstName: 'john', lastName: 'Smith', age: 20, role: 'editor' },
+      })
       .expect(201)
       .then(async response => {
         assert.equal(response.body.firstName, 'john');
@@ -57,6 +57,7 @@ describe('create generator', () => {
         const users = await this.repository.find();
         assert.equal(users.length, 1);
         assert.equal(users[0].firstName, 'john');
+        assert.equal(users[0].role, 'editor');
       });
   });
 });

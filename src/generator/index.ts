@@ -68,6 +68,24 @@ const generate = (config, entitiesMap, getRepository): any => {
         const skip = (pageNum - 1) * pageSize;
         const conditionsObj = extractFilter(req.query.filter);
         const filterObj = _converFilterObj(conditionsObj);
+
+        const columns = entitiesMap[model.entity].toAdminJson().columns;
+        Object.keys(filterObj).forEach(key => {
+          const value = filterObj[key];
+          columns.forEach(column => {
+            if (column.id === key) {
+              if (column.type === 'boolean') {
+                if (value === 'true') {
+                  filterObj[key] = true;
+                }
+                if (value === 'false') {
+                  filterObj[key] = false;
+                }
+              }
+            }
+          });
+        });
+
         const intermediateSortObj = extractSort(req.query.sort);
         const sortObj = _convertSortObj(intermediateSortObj);
         const [items, total] = await repository
@@ -85,6 +103,7 @@ const generate = (config, entitiesMap, getRepository): any => {
             total,
           },
           sort: intermediateSortObj,
+          filter: filterObj,
         });
       });
     }
