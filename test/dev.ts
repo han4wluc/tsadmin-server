@@ -1,5 +1,5 @@
-import { createConnection, getRepository, EntityMetadata } from 'typeorm';
-import { entitiesMap } from '~/entity';
+import { createConnection, getRepository } from 'typeorm';
+import { entitiesMap } from 'test/entity';
 
 import { createApp } from '~/express';
 import generator, { admin } from '~/generator';

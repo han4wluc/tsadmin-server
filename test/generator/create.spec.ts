@@ -4,10 +4,10 @@ import 'mocha';
 import { getRepository, getConnection } from 'typeorm';
 import { connect, runMigrations, revertAllMigrations } from 'test/db';
 
-import { createApp } from '~/express';
-import { User } from '~/entity/User';
+import { createApp } from 'test/express';
+import { User } from 'test/entity/User';
 import generator from '~/generator';
-import { entitiesMap } from '~/entity';
+import { entitiesMap } from 'test/entity';
 
 const assert = chai.assert;
 

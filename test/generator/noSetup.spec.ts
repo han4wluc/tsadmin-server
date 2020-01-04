@@ -2,7 +2,7 @@ import 'mocha';
 import * as request from 'supertest';
 
 import { runMigrations, revertAllMigrations } from 'test/db';
-import { createApp } from '~/express';
+import { createApp } from 'test/express';
 
 describe('without setting up generators', () => {
   this.app = undefined;
