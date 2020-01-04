@@ -10,10 +10,7 @@ import {
 class BaseEntity {
   constructor(params) {
     if (params) {
-      Object.keys(params).forEach(key => {
-        const value = params[key];
-        this[key] = value;
-      });
+      Object.assign(this, params);
     }
   }
 

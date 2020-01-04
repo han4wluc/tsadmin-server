@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 
-import BaseEntity, { AdminJsonType } from './BaseEntity';
+import BaseEntity, { AdminJsonType } from '~/entity/BaseEntity';
 
 export type UserRoleType = 'admin' | 'editor' | 'ghost';
 
