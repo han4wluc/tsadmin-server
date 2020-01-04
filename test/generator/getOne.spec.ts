@@ -7,6 +7,7 @@ import { runMigrations, revertAllMigrations } from 'test/db';
 import { createApp } from 'test/express';
 import { User } from 'test/entity/User';
 import generator from '~/generator';
+import loadFixtures from 'test/fixtures';
 
 import { entitiesMap } from 'test/entity';
 
@@ -17,20 +18,7 @@ describe('generator getAll', () => {
   beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
-    const repository = getRepository(User);
-    await repository.query(`DELETE FROM user;`);
-    const user = new User({
-      firstName: 'aaa',
-      lastName: 'bbb',
-      age: 9,
-    });
-    const user2 = new User({
-      firstName: 'ccc',
-      lastName: 'ddd',
-      age: 10,
-    });
-    await repository.save(user);
-    await repository.save(user2);
+    await loadFixtures('test/fixtures');
   });
   afterEach(revertAllMigrations);
   it('should return one users', async () => {

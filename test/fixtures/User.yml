@@ -1,0 +1,14 @@
+entity: User
+items:
+  user1:
+    firstName: 'aaa'
+    lastName: 'bbb'
+    age: 9
+    active: true
+    role: 'admin'
+  user2:
+    firstName: 'ccc'
+    lastName: 'ddd'
+    age: 10
+    active: false
+    role: 'editor'

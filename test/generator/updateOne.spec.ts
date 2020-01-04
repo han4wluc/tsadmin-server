@@ -8,6 +8,7 @@ import { createApp } from 'test/express';
 import { User } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
+import loadFixtures from 'test/fixtures';
 
 const assert = chai.assert;
 
@@ -16,13 +17,7 @@ describe('updateOne', () => {
   beforeEach(runMigrations);
   beforeEach(async () => {
     this.app = await createApp();
-    const repository = getRepository(User);
-    const user = new User({
-      firstName: 'aaa',
-      lastName: 'bbb',
-      age: 9,
-    });
-    await repository.save(user);
+    await loadFixtures('test/fixtures');
   });
   afterEach(revertAllMigrations);
   it('should update one user', async () => {

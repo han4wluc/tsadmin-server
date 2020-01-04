@@ -9,6 +9,7 @@ import { User } from 'test/entity/User';
 import generator from '~/generator';
 
 import { entitiesMap } from 'test/entity';
+import loadFixtures from 'test/fixtures';
 
 const assert = chai.assert;
 
@@ -19,23 +20,7 @@ describe('generator getAll', () => {
 
   beforeEach(async () => {
     this.app = await createApp();
-    const repository = getRepository(User);
-    const user = new User({
-      firstName: 'aaa',
-      lastName: 'bbb',
-      age: 9,
-      active: true,
-      role: 'admin',
-    });
-    const user2 = new User({
-      firstName: 'ccc',
-      lastName: 'ddd',
-      age: 10,
-      active: false,
-      role: 'editor',
-    });
-    await repository.save(user);
-    await repository.save(user2);
+    await loadFixtures('test/fixtures');
   });
 
   beforeEach(() => {
