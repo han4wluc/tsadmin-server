@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 import 'mocha';
-import * as chai from 'chai';
+import { assert } from 'chai';
 import { getRepository } from 'typeorm';
 
 import { runMigrations, revertAllMigrations } from 'test/db';
@@ -10,8 +10,6 @@ import generator from '~/generator';
 import loadFixtures from 'test/fixtures';
 
 import { entitiesMap } from 'test/entity';
-
-const assert = chai.assert;
 
 describe('generator getAll', () => {
   this.app = undefined;

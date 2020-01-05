@@ -1,5 +1,5 @@
 import 'mocha';
-import * as chai from 'chai';
+import { assert } from 'chai';
 import * as request from 'supertest';
 import { getRepository } from 'typeorm';
 
@@ -8,8 +8,6 @@ import { createApp } from 'test/express';
 import { User } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
-
-const assert = chai.assert;
 
 describe('get entities', () => {
   this.app = undefined;

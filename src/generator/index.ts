@@ -44,23 +44,30 @@ const generate = (config, entitiesMap, getRepository): any => {
   });
 
   config.models.forEach(model => {
-    const { label, entity, routes } = model;
+    const { label, entity, routes, responseOmitAttributes = [] } = model;
 
     const Entity = entitiesMap[entity];
     const repository = getRepository(entity);
 
     if (routes.create && routes.create.enabled) {
+      let omitAttributes = routes.create.omitAttributes || [];
+      omitAttributes = omitAttributes.concat([
+        'id',
+        'uuid',
+        'createdAt',
+        'updatedAt',
+        'version',
+      ]);
       router.post(`/${label}`, async (req, res) => {
-        const data = omit(req.body.data, [
-          'id',
-          'uuid',
-          'createdAt',
-          'updatedAt',
-          'version',
-        ]);
+        const data = omit(req.body.data, omitAttributes);
         const item = new Entity(data);
-        await repository.save(item);
-        res.status(201).json(item);
+
+        const savedItem = await repository.save(item);
+        const result = omit(
+          JSON.parse(JSON.stringify(savedItem)),
+          responseOmitAttributes,
+        );
+        res.status(201).json(result);
       });
     }
 
@@ -103,8 +110,11 @@ const generate = (config, entitiesMap, getRepository): any => {
           .skip(skip)
           .orderBy(sortObj)
           .getManyAndCount();
+        const resultItems = items.map(item => {
+          return omit(JSON.parse(JSON.stringify(item)), responseOmitAttributes);
+        });
         res.status(200).json({
-          items,
+          items: resultItems,
           page: {
             num: pageNum,
             size: pageSize,
@@ -123,7 +133,11 @@ const generate = (config, entitiesMap, getRepository): any => {
         if (!item) {
           return res.status(404).send();
         }
-        res.status(200).json(item);
+        const result = omit(
+          JSON.parse(JSON.stringify(item)),
+          responseOmitAttributes,
+        );
+        res.status(200).json(result);
       });
     }
 
@@ -134,19 +148,25 @@ const generate = (config, entitiesMap, getRepository): any => {
         if (!item) {
           return res.status(404).send();
         }
-        const data = omit(req.body.data, [
+        let omitAttributes = routes.updateOne.omitAttributes || [];
+        omitAttributes = omitAttributes.concat([
           'id',
           'uuid',
-          'updatedAt',
           'createdAt',
+          'updatedAt',
           'version',
         ]);
+        const data = omit(req.body.data, omitAttributes);
         Object.keys(data).map(key => {
           const value = req.body.data[key];
           item[key] = value;
         });
-        await repository.save(item);
-        res.status(200).json(item);
+        const updatedItem = await repository.save(item);
+        const result = omit(
+          JSON.parse(JSON.stringify(updatedItem)),
+          responseOmitAttributes,
+        );
+        res.status(200).json(result);
       });
     }
 

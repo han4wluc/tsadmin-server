@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 import * as request from 'supertest';
-import * as chai from 'chai';
+import { assert } from 'chai';
 import 'mocha';
 
 import { runMigrations, revertAllMigrations } from 'test/db';
@@ -9,8 +9,6 @@ import { createApp } from 'test/express';
 import { User } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
-
-const assert = chai.assert;
 
 describe('updateOne', () => {
   this.app = undefined;
