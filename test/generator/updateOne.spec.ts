@@ -18,10 +18,6 @@ describe('updateOne', () => {
   beforeEach(async () => {
     this.app = await createApp();
     await loadFixtures('test/fixtures');
-  });
-  afterEach(revertAllMigrations);
-  it('should update one user', async () => {
-    const repository = getRepository(User);
     const config = {
       models: [
         {
@@ -35,10 +31,13 @@ describe('updateOne', () => {
         },
       ],
     };
-
+    this.app.use(generator(config, entitiesMap, getRepository));
+  });
+  afterEach(revertAllMigrations);
+  it('should update one user', async () => {
+    const repository = getRepository(User);
     const user = await repository.findOne();
 
-    this.app.use(generator(config, entitiesMap, getRepository));
     return request(this.app)
       .patch(`/users/${user.id}`)
       .send({ data: { firstName: 'newname' } })
@@ -47,6 +46,17 @@ describe('updateOne', () => {
         assert.equal(response.body.firstName, 'newname');
         const newUser = await repository.findOne(user.id);
         assert.equal(newUser.firstName, 'newname');
+      });
+  });
+  it('should not update id', async () => {
+    const repository = getRepository(User);
+    const user = await repository.findOne();
+    return request(this.app)
+      .patch(`/users/${user.id}`)
+      .send({ data: { id: 5 } })
+      .expect(200)
+      .then(async response => {
+        assert.equal(response.body.id, 1);
       });
   });
 });

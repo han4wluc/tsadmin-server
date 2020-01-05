@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import * as serve from 'express-static';
+import { omit } from 'lodash';
 
 import extractFilter from '../helpers/extractFilter';
 import extractSort from '../helpers/extractSort';
@@ -50,7 +51,14 @@ const generate = (config, entitiesMap, getRepository): any => {
 
     if (routes.create && routes.create.enabled) {
       router.post(`/${label}`, async (req, res) => {
-        const item = new Entity(req.body.data);
+        const data = omit(req.body.data, [
+          'id',
+          'uuid',
+          'createdAt',
+          'updatedAt',
+          'version',
+        ]);
+        const item = new Entity(data);
         await repository.save(item);
         res.status(201).json(item);
       });
@@ -126,7 +134,14 @@ const generate = (config, entitiesMap, getRepository): any => {
         if (!item) {
           return res.status(404).send();
         }
-        Object.keys(req.body.data).map(key => {
+        const data = omit(req.body.data, [
+          'id',
+          'uuid',
+          'updatedAt',
+          'createdAt',
+          'version',
+        ]);
+        Object.keys(data).map(key => {
           const value = req.body.data[key];
           item[key] = value;
         });

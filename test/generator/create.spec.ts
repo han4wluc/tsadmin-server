@@ -46,13 +46,20 @@ describe('create generator', () => {
     return request(this.app)
       .post('/users')
       .send({
-        data: { firstName: 'john', lastName: 'Smith', age: 20, role: 'editor' },
+        data: {
+          id: 5,
+          firstName: 'john',
+          lastName: 'Smith',
+          age: 20,
+          role: 'editor',
+        },
       })
       .expect(201)
       .then(async response => {
         assert.equal(response.body.firstName, 'john');
         assert.equal(response.body.lastName, 'Smith');
         assert.equal(response.body.age, 20);
+        assert.equal(response.body.id, 1);
 
         const users = await this.repository.find();
         assert.equal(users.length, 1);
