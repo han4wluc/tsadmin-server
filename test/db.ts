@@ -1,5 +1,5 @@
 import { createConnection, getConnection } from 'typeorm';
-import { User } from './entity/User'
+import { User } from './entity/User';
 
 export const connect = (): Promise<any> => {
   return createConnection({

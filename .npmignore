@@ -12,3 +12,5 @@ migrations
 .env.sample
 .env
 docker-compose.yaml
+.github
+index.md
