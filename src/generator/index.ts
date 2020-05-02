@@ -1,10 +1,11 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import * as serve from 'express-static';
 import { omit } from 'lodash';
 
 import extractFilter from '../helpers/extractFilter';
 import extractSort from '../helpers/extractSort';
+
+import * as bodyParser from 'body-parser';
 
 const _converFilterObj = (input): any => {
   const output = {};
@@ -28,6 +29,7 @@ const generate = (config, entitiesMap, getRepository): any => {
   const router = express.Router();
 
   router.use(cors());
+  router.use(bodyParser.json());
 
   router.get('/entities', (req, res) => {
     const entities = config.models.map(model => {
@@ -35,7 +37,7 @@ const generate = (config, entitiesMap, getRepository): any => {
         id: model.id,
         label: model.label,
         routes: model.routes,
-        columns: entitiesMap[model.entity].toAdminJson().columns,
+        columns: model.columns,
       };
     });
     res.status(200).json({
@@ -84,7 +86,7 @@ const generate = (config, entitiesMap, getRepository): any => {
         const conditionsObj = extractFilter(req.query.filter);
         const filterObj = _converFilterObj(conditionsObj);
 
-        const columns = entitiesMap[model.entity].toAdminJson().columns;
+        const columns = model.columns;
         Object.keys(filterObj).forEach(key => {
           const value = filterObj[key];
           columns.forEach(column => {
@@ -186,7 +188,3 @@ const generate = (config, entitiesMap, getRepository): any => {
 };
 
 export default generate;
-
-export function admin() {
-  return serve(__dirname + '/../../../static');
-}

@@ -1,10 +1,11 @@
 import { assert } from 'chai';
 import 'mocha';
 import * as request from 'supertest';
-import { getRepository } from 'typeorm';
+import { getRepository, getConnection } from 'typeorm';
 
-import { runMigrations, revertAllMigrations } from 'test/db';
+import { connect } from 'test/db';
 import { createApp } from 'test/express';
+import { userAdminColumns } from 'test/entity/User';
 import generator from '~/generator';
 
 import { entitiesMap } from 'test/entity';
@@ -13,9 +14,8 @@ import loadFixtures from 'test/fixtures';
 describe('generator getAll', () => {
   this.app = undefined;
 
-  beforeEach(runMigrations);
-
   beforeEach(async () => {
+    await connect();
     this.app = await createApp();
     await loadFixtures('test/fixtures');
   });
@@ -31,14 +31,15 @@ describe('generator getAll', () => {
               enabled: true,
             },
           },
+          columns: userAdminColumns,
         },
       ],
     };
     this.app.use(generator(config, entitiesMap, getRepository));
   });
-
-  afterEach(revertAllMigrations);
-
+  afterEach(() => {
+    return getConnection().close();
+  });
   it('should return all users', async () => {
     return request(this.app)
       .get('/users')

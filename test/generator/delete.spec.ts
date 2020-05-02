@@ -1,19 +1,18 @@
-import { getRepository } from 'typeorm';
+import { getRepository, getConnection } from 'typeorm';
 import * as request from 'supertest';
 import { assert } from 'chai';
 import 'mocha';
-
-import { runMigrations, revertAllMigrations } from 'test/db';
+import { connect } from 'test/db';
 
 import { createApp } from 'test/express';
-import { User } from 'test/entity/User';
+import { User, userAdminColumns } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
 
 describe('updateOne', () => {
   this.app = undefined;
-  beforeEach(runMigrations);
   beforeEach(async () => {
+    await connect();
     this.app = await createApp();
     this.repository = getRepository(User);
     const user = new User({
@@ -23,7 +22,11 @@ describe('updateOne', () => {
     });
     await this.repository.save(user);
   });
-  afterEach(revertAllMigrations);
+
+  afterEach(() => {
+    return getConnection().close();
+  });
+
   it('should update one user', async () => {
     const repository = getRepository(User);
     const config = {
@@ -36,6 +39,7 @@ describe('updateOne', () => {
               enabled: true,
             },
           },
+          columns: userAdminColumns,
         },
       ],
     };

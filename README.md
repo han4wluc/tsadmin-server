@@ -1,7 +1,6 @@
 # Awesome Project Build with TypeORM
 
-Steps to run this project:
+TODO
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+
+NODE_ENV=development yarn fixtures ./test/fixtures --config ./ormconfig.js --require=ts-node/register --require=tsconfig-paths/register

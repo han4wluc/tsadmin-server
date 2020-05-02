@@ -3,30 +3,23 @@ import { assert } from 'chai';
 import 'mocha';
 import { getRepository, getConnection } from 'typeorm';
 import { connect, runMigrations, revertAllMigrations } from 'test/db';
-
 import { createApp } from 'test/express';
-import { User } from 'test/entity/User';
+import { User, userAdminColumns } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
-
-before(() => {
-  return connect();
-});
-
-after(() => {
-  return getConnection().close();
-});
 
 describe('create generator', () => {
   this.app = undefined;
   this.repository = undefined;
-  beforeEach(runMigrations);
-  beforeEach(() => {
+  beforeEach(async () => {
+    await connect();
     this.app = createApp();
     this.repository = getRepository(User);
   });
 
-  afterEach(revertAllMigrations);
+  afterEach(() => {
+    return getConnection().close();
+  });
 
   context('base setup', () => {
     beforeEach(async () => {
@@ -40,6 +33,7 @@ describe('create generator', () => {
                 enabled: true,
               },
             },
+            columns: userAdminColumns,
           },
         ],
       };

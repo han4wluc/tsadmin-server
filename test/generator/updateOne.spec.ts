@@ -1,24 +1,25 @@
-import { getRepository } from 'typeorm';
+import { getRepository, getConnection } from 'typeorm';
 import { assert } from 'chai';
 import 'mocha';
 import * as request from 'supertest';
 
-import { runMigrations, revertAllMigrations } from 'test/db';
+import { connect } from 'test/db';
 import { createApp } from 'test/express';
-import { User } from 'test/entity/User';
+import { User, userAdminColumns } from 'test/entity/User';
 import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
 import loadFixtures from 'test/fixtures';
 
 describe('updateOne', () => {
   this.app = undefined;
-  beforeEach(runMigrations);
   beforeEach(async () => {
+    await connect();
     this.app = await createApp();
     await loadFixtures('test/fixtures');
   });
-  afterEach(revertAllMigrations);
-
+  afterEach(() => {
+    return getConnection().close();
+  });
   context('base setup', () => {
     beforeEach(() => {
       const config = {
@@ -31,6 +32,7 @@ describe('updateOne', () => {
                 enabled: true,
               },
             },
+            columns: userAdminColumns,
           },
         ],
       };

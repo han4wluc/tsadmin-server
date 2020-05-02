@@ -1,4 +1,4 @@
-import { createApp } from '~/express';
+import { createApp } from 'test/express';
 
 class TestApp {
   static instance: any;

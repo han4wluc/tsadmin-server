@@ -1,7 +1,16 @@
 import { createConnection, getConnection } from 'typeorm';
+import { User } from './entity/User'
 
 export const connect = (): Promise<any> => {
-  return createConnection();
+  return createConnection({
+    type: 'postgres',
+    synchronize: true,
+    dropSchema: true,
+    username: 'postgres',
+    password: 'postgres',
+    database: 'tsadmintest',
+    entities: [User],
+  });
 };
 
 const hasUnrevertedMigrations = async (): Promise<any> => {

@@ -1,8 +1,8 @@
 import { createConnection, getRepository } from 'typeorm';
 import { entitiesMap } from 'test/entity';
 
-import { createApp } from '~/express';
-import generator, { admin } from '~/generator';
+import { createApp } from 'test/express';
+import generator from '~/generator';
 
 const main = async (): Promise<any> => {
   await createConnection();
@@ -32,7 +32,6 @@ const main = async (): Promise<any> => {
   };
 
   app.use('/api', generator(config, entitiesMap, getRepository));
-  app.use(admin());
   app.listen(8000);
   console.log(
     'Express server has started on port 8000. Open http://localhost:8000 to see results',
