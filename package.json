@@ -2,6 +2,7 @@
    "name": "tsadmin",
    "version": "0.0.2",
    "description": "tsadmin api server.",
+   "license": "MIT",
    "devDependencies": {
       "@types/chai": "^4.2.5",
       "@types/mocha": "^5.2.7",
