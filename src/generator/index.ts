@@ -25,11 +25,34 @@ const _convertSortObj = (input): any => {
   return output;
 };
 
-const generate = (config, entitiesMap, getRepository): any => {
+const generate = (config, entitiesMap, getRepository, authToken?): any => {
   const router = express.Router();
+
+  if (authToken) {
+    router.use((req, res, next) => {
+      if (req.headers['authorization'] !== `Bearer ${authToken}`) {
+        res.status(401).send();
+        return;
+      }
+      next();
+    });
+  } else {
+    if (process.env.NODE_ENV !== 'testing') {
+      console.warn(
+        'authToken was not provided, the API is available to the public',
+      );
+    }
+  }
 
   router.use(cors());
   router.use(bodyParser.json());
+
+  router.post('/authorize', (req, res) => {
+    res.status(200).json({
+      success: true,
+    });
+    return;
+  });
 
   router.get('/entities', (req, res) => {
     const entities = config.models.map(model => {

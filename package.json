@@ -1,6 +1,6 @@
 {
    "name": "tsadmin",
-   "version": "0.0.1",
+   "version": "0.0.2",
    "description": "tsadmin api server.",
    "devDependencies": {
       "@types/chai": "^4.2.5",
