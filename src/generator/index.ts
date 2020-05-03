@@ -62,6 +62,7 @@ const generate = (config, entitiesMap, getRepository, authToken?): any => {
         label: model.label,
         routes: model.routes,
         columns: model.columns,
+        relations: model.relations,
       };
     });
     res.status(200).json({
@@ -157,7 +158,12 @@ const generate = (config, entitiesMap, getRepository, authToken?): any => {
     if (routes.getOne && routes.getOne.enabled) {
       router.get(`/${label}/:id`, async (req, res) => {
         const { id } = req.params;
-        const item = await repository.findOne(id);
+        const item = await repository.findOne({
+          where: {
+            id,
+          },
+          relations: model.relations || [],
+        });
         if (!item) {
           return res.status(404).send();
         }
