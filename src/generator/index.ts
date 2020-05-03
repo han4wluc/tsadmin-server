@@ -28,6 +28,9 @@ const _convertSortObj = (input): any => {
 const generate = (config, entitiesMap, getRepository, authToken?): any => {
   const router = express.Router();
 
+  router.use(cors());
+  router.use(bodyParser.json());
+
   if (authToken) {
     router.use((req, res, next) => {
       if (req.headers['authorization'] !== `Bearer ${authToken}`) {
@@ -43,9 +46,6 @@ const generate = (config, entitiesMap, getRepository, authToken?): any => {
       );
     }
   }
-
-  router.use(cors());
-  router.use(bodyParser.json());
 
   router.post('/authorize', (req, res) => {
     res.status(200).json({
