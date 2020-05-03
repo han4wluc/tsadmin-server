@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { assert } from 'chai';
 import 'mocha';
 import { getRepository, getConnection } from 'typeorm';
-import { connect, runMigrations, revertAllMigrations } from 'test/db';
+import { connect } from 'test/db';
 import { createApp } from 'test/express';
 import { User, userAdminColumns } from 'test/entity/User';
 import generator from '~/generator';
