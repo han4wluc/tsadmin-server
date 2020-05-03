@@ -1,5 +1,6 @@
 import { createConnection, getConnection } from 'typeorm';
 import { User } from './entity/User';
+import { Company } from './entity/Company';
 
 export const connect = (): Promise<any> => {
   return createConnection({
@@ -9,7 +10,7 @@ export const connect = (): Promise<any> => {
     username: 'postgres',
     password: 'postgres',
     database: 'tsadmintest',
-    entities: [User],
+    entities: [User, Company],
   });
 };
 

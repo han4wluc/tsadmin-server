@@ -17,6 +17,7 @@ const loadFixtures = async (fixturesPath: string) => {
       await repository.save(entity);
     }
   } catch (err) {
+    console.warn('error', err);
     throw err;
   }
 };

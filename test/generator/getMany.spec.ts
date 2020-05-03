@@ -11,7 +11,7 @@ import generator from '~/generator';
 import { entitiesMap } from 'test/entity';
 import loadFixtures from 'test/fixtures';
 
-describe('generator getAll', () => {
+describe('generator getMany', () => {
   this.app = undefined;
 
   beforeEach(async () => {
@@ -46,8 +46,6 @@ describe('generator getAll', () => {
       .expect(200)
       .then(response => {
         assert.equal(response.body.items.length, 2);
-        assert.equal(response.body.items[0].firstName, 'aaa');
-        assert.equal(response.body.items[1].firstName, 'ccc');
       });
   });
 
@@ -94,6 +92,17 @@ describe('generator getAll', () => {
           assert.equal(response.body.items[0].role, 'editor');
         });
     });
+
+    it('should not return relations data', () => {
+      return request(this.app)
+        .get('/users?filter=and(firstName:eq:aaa)')
+        .expect(200)
+        .then(response => {
+          assert.equal(response.body.items.length, 1);
+          assert.equal(response.body.items[0].firstName, 'aaa');
+          assert.equal(response.body.items[0].company, undefined);
+        });
+    });
   });
 
   it('should return with correct sort', async () => {
@@ -129,6 +138,48 @@ describe('generator getAll', () => {
             order: 'desc',
           },
         ]);
+      });
+  });
+});
+
+describe('generator getMany with relations', () => {
+  this.app = undefined;
+
+  beforeEach(async () => {
+    await connect();
+    this.app = await createApp();
+    await loadFixtures('test/fixtures');
+  });
+
+  beforeEach(() => {
+    const config = {
+      models: [
+        {
+          label: 'users',
+          entity: 'User',
+          relations: ['company'],
+          routes: {
+            getMany: {
+              enabled: true,
+            },
+          },
+          columns: userAdminColumns,
+        },
+      ],
+    };
+    this.app.use(generator(config, entitiesMap, getRepository));
+  });
+  afterEach(() => {
+    return getConnection().close();
+  });
+  it('should not return relations data', () => {
+    return request(this.app)
+      .get('/users?filter=and(firstName:eq:aaa)')
+      .expect(200)
+      .then(response => {
+        assert.equal(response.body.items.length, 1);
+        assert.equal(response.body.items[0].firstName, 'aaa');
+        assert.equal(response.body.items[0].company.id, 1);
       });
   });
 });

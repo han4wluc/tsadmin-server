@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import { omit } from 'lodash';
+import { Repository } from 'typeorm';
 
 import extractFilter from '../helpers/extractFilter';
 import extractSort from '../helpers/extractSort';
@@ -72,7 +73,7 @@ const generate = (config, entitiesMap, getRepository, authToken?): any => {
     const { label, entity, routes, responseOmitAttributes = [] } = model;
 
     const Entity = entitiesMap[entity];
-    const repository = getRepository(entity);
+    const repository: Repository<any> = getRepository(entity);
 
     if (routes.create && routes.create.enabled) {
       let omitAttributes = routes.create.omitAttributes || [];
@@ -128,13 +129,15 @@ const generate = (config, entitiesMap, getRepository, authToken?): any => {
 
         const intermediateSortObj = extractSort(req.query.sort);
         const sortObj = _convertSortObj(intermediateSortObj);
-        const [items, total] = await repository
-          .createQueryBuilder(label)
-          .where(filterObj)
-          .take(take)
-          .skip(skip)
-          .orderBy(sortObj)
-          .getManyAndCount();
+
+        const [items, total] = await repository.findAndCount({
+          where: filterObj,
+          take,
+          skip,
+          order: sortObj,
+          relations: model.relations || [],
+        });
+
         const resultItems = items.map(item => {
           return omit(JSON.parse(JSON.stringify(item)), responseOmitAttributes);
         });

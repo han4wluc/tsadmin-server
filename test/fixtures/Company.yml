@@ -1,0 +1,6 @@
+entity: Company
+items:
+  company1:
+    id: 1
+    name: 'company1'
+    

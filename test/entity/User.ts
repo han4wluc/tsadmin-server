@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 import BaseEntity from '~/entity/BaseEntity';
+import { Company } from './Company';
 
 export type UserRoleType = 'admin' | 'editor' | 'ghost';
 
@@ -45,6 +46,10 @@ export class User extends BaseEntity {
     nullable: true,
   })
   config: object;
+
+  @ManyToOne(type => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 }
 
 export const userAdminColumns = [
