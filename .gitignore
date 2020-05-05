@@ -8,3 +8,4 @@ database.sqlite
 mysql_volume
 yarn-error.log
 .env
+demo/db

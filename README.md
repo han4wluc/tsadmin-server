@@ -1,6 +1,26 @@
-# Awesome Project Build with TypeORM
-
-TODO
 
 
-NODE_ENV=development yarn fixtures ./test/fixtures --config ./ormconfig.js --require=ts-node/register --require=tsconfig-paths/register
+# tsadmin-server
+
+Related project: [tsadmin-dashboard](https://github.com/han4wluc/tsadmin-dashboard)
+
+
+## Introduction
+
+`tsadmin` provides an dashboard interface and a node package to be installed in a node backend server.
+
+The interface provdes basic CRUD features to explore your data.
+
+It supports different data types including `string`, `text`, `boolean` `number`, `data`, `datetime`, `model`
+
+
+## Demo
+
+https://tsadmin-dashboard.han4wluc.com
+
+Input the following credentials:
+
+Url: `https://tsadmin-server-demo.han4wluc.com`
+
+Auth Token: `demo`
+

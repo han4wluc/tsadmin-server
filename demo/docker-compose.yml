@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  db:
+    image: han4wluc/tsadmin-server-demo:latest
+    volumes:
+      - db_tsadmin_server_demo:/app/data
+    restart: always
+    ports:
+      - 8002:8002
+
+volumes:
+  db_tsadmin_server_demo: {}
