@@ -40,7 +40,7 @@ describe('create generator', () => {
       this.app.use(generator(config, entitiesMap, getRepository));
     });
 
-    it('should return true', () => {
+    it('should create user', () => {
       return request(this.app)
         .post('/users')
         .send({
@@ -63,6 +63,20 @@ describe('create generator', () => {
           assert.equal(users.length, 1);
           assert.equal(users[0].firstName, 'john');
           assert.equal(users[0].role, 'editor');
+        });
+    });
+
+    it('should throw error', () => {
+      return request(this.app)
+        .post('/users')
+        .send({
+          data: {},
+        })
+        .expect(500)
+        .then(async response => {
+          assert.deepEqual(response.body, {
+            success: false,
+          });
         });
     });
   });
