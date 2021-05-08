@@ -32,7 +32,7 @@
       "express": "^4.15.4",
       "lodash": "^4.17.15",
       "reflect-metadata": "^0.1.10",
-      "typeorm": "0.2.24"
+      "typeorm": "0.2.25"
    },
    "scripts": {
       "start": "ts-node -r tsconfig-paths/register test/dev.ts",
